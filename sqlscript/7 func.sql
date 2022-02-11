@@ -1,7 +1,4 @@
-# 第七章 MYSQL内置函数
-
-### 7.1 数值函数
-```SQL
+-- MYSQL 数值函数
 -- ROUND() 四舍五入
 SELECT ROUND(5.73);         -- 6
 SELECT ROUND(5.7355, 2);    -- 5.74
@@ -15,9 +12,9 @@ SELECT FLOOR(5.9);          -- 5
 SELECT ABS(-5.9);           -- 5.9
 -- RAND()  随机生成 0-1 的浮点数
 SELECT RAND();
-```
-### 7.2 字符串函数
-```SQL
+
+
+-- MYSQL 字符串函数
 -- LENGTH()  返回字符串的长度
 SELECT LENGTH('SKY');       -- 3
 -- UPPER()   全部变为大写字母
@@ -48,16 +45,14 @@ SELECT CONCAT('Kinder', 'garden');    -- Kindergarden
 USE sql_store;
 SELECT CONCAT(first_name,' ',last_name) AS full_name
 FROM customers;
-```
-### 7.3 日期函数
-```sql
+
+
+-- SQL 中的日期函数
 SELECT 
 	NOW(),      # 当前的日期和时间
 	CURDATE(),  # 当前的日期
 	CURTIME();  # 当前的时间
-```
 
-```sql
 -- 从日期中提取特定的值    
 SELECT 
 	NOW(),
@@ -67,17 +62,13 @@ SELECT
     HOUR(NOW()),  #      时
     MINUTE(NOW()),#      分
     SECOND(NOW());#      秒
-```
 
-```sql
 -- 返回字符串名称
 SELECT 
 	NOW(),
 	DAYNAME(NOW()),   # 星期几
 	MONTHNAME(NOW()); # 月份全称
-```
-
-```sql
+    
 -- EXTRACT()("提取") 函数用于返回日期/时间的单独部分，
 -- 比如年、月、日、小时、分钟等等
 SELECT 
@@ -85,59 +76,25 @@ SELECT
     EXTRACT(MONTH FROM NOW()) AS 'MONTH',
     EXTRACT(DAY FROM NOW()) AS 'DAY',
     EXTRACT(YEAR_MONTH FROM NOW()) AS 'YEAR_MONTH';
-```
-#### 练习
-```sql
+    
+-- EXERCISE
 -- 查询当年的订单  (由于执行的年份是2022年，所以什么也查不到)
 USE sql_store;
 
 SELECT *
 FROM orders
 WHERE YEAR(order_date) = YEAR(CURDATE());
-```
-### 7.4 格式化日期和时间
-格式	描述
-%a	缩写星期名
-%b	缩写月名
-%c	月，数值
-%D	带有英文前缀的月中的天
-%d	月的天，数值(00-31)
-%e	月的天，数值(0-31)
-%f	微秒
-%H	小时 (00-23)
-%h	小时 (01-12)
-%I	小时 (01-12)
-%i	分钟，数值(00-59)
-%j	年的天 (001-366)
-%k	小时 (0-23)
-%l	小时 (1-12)
-%M	月名
-%m	月，数值(00-12)
-%p	AM 或 PM
-%r	时间，12-小时（hh:mm:ss AM 或 PM）
-%S	秒(00-59)
-%s	秒(00-59)
-%T	时间, 24-小时 (hh:mm:ss)
-%U	周 (00-53) 星期日是一周的第一天
-%u	周 (00-53) 星期一是一周的第一天
-%V	周 (01-53) 星期日是一周的第一天，与 %X 使用
-%v	周 (01-53) 星期一是一周的第一天，与 %x 使用
-%W	星期名
-%w	周的天 （0=星期日, 6=星期六）
-%X	年，其中的星期日是周的第一天，4 位，与 %V 使用
-%x	年，其中的星期一是周的第一天，4 位，与 %v 使用
-%Y	年，4 位
-%y	年，2 位
 
-```sql
+
+-- 格式化日期和时间
+-- TIME_FORMAT
 SELECT 
 	DATE_FORMAT(NOW(), "%Y-%M-%D"), -- 日期格式化
 	DATE_FORMAT(NOW(), "%Y-%m-%d"),
 	TIME_FORMAT(NOW(), "%H-%i-%S"), -- 时间格式化
 	TIME_FORMAT(NOW(), "%h-%p-%i-%s");
-```
-### 7.5 计算日期和时间
-```sql
+
+
 -- 计算日期和时间
 -- DATE_ADD DATE_SUB
 -- 在当前日期加上1天
@@ -152,10 +109,9 @@ SELECT DATEDIFF('2019-01-01','2019-05-01');
 
 -- 计算秒数间隔
 SELECT TIME_TO_SEC('9:00') - TIME_TO_SEC('9:02');
-```
-### 7.6 IF NULL 和 COALESCE 函数
-- IFNULL() 函数用于判断第一个表达式是否为 NULL，如果为 NULL 则返回第二个参数的值，如果不为 NULL 则返回第一个参数的值
-```SQL
+
+
+-- IF NULL 和 COALESCE 函数
 -- IFNULL(expression, alt_value)
 USE sql_store;
 -- 查询订单信息：查询订单对应的shipper信息，如果为空，则表示还未分配
@@ -163,9 +119,8 @@ SELECT
 	order_id,
     IFNULL(shipper_id, 'not assigned') AS shipper
 FROM orders;
-```
--  coalesce() 返回参数中的第一个非空表达式（从左向右依次类推）
-```SQL
+
+
 -- COALESCE(alt_value1,alt_value2,alt_value3,...)
 -- 返回传入的参数中第一个非null的值
 
@@ -174,17 +129,16 @@ SELECT
 	order_id,
     COALESCE(shipper_id, comments,'not assigned') AS shipper
 FROM orders;
-```
-#### 练习
-```SQL
+
+-- EXERCISE
 -- 查询customers表，返回顾客全名，电话（空值返回'unknown'）
 SELECT 
 	CONCAT(first_name,' ',last_name) AS customer,
     IFNULL(phone, 'unknown') AS phone
-FROM customers
-```
-### 7.7 IF 函数
-```SQL
+FROM customers;
+
+
+-- IF 函数
 -- IF(expression, alt_value1, alt_value2)  如果表达式为真，返回alt_value1，否则返回alt_value2
 
 -- 查询活跃订单（2019年以后下了订单）
@@ -193,9 +147,9 @@ SELECT
     order_date,
 	IF(order_date > '2019-01-01', 'Active', 'Archived') AS state
 FROM orders;
-```
-#### 练习
-```SQL
+
+
+-- EXERCISE
 -- 查看每件商品被订购的次数
 USE sql_store;
 
@@ -206,19 +160,11 @@ SELECT
     IF(COUNT(*) > 1, 'Many times', 'Onces') AS frequence
 FROM products p
 LEFT JOIN order_items oi USING (product_id)
-GROUP BY p.product_id
-```
-### 7.8 CASE 运算符
-```
-CASE
-    WHEN <条件1> THEN <命令>
-    WHEN <条件2> THEN <命令>
-    ...
-    ELSE commands
-END;
-```
-- 筛选多组条件
-```SQL
+GROUP BY p.product_id;
+
+
+-- CASE 运算符
+-- 筛选多组条件
 -- 筛选 2019年(active)，2018年(last year)，以及2018年以前的订单(archived)
 SELECT 
 	order_id,
@@ -229,9 +175,8 @@ SELECT
         WHEN YEAR(order_date) < 2018 THEN 'Archived'
 	END AS state
 FROM orders;
-```
-#### 练习
-```sql
+
+-- EXERCISE
 -- 根据顾客的积分，对顾客进行分级
 SELECT 
 	CONCAT(first_name,' ',last_name) AS customer,
@@ -242,4 +187,5 @@ SELECT
         ELSE 'Bronze'
 	END AS category
 FROM customers;
-```
+
+
